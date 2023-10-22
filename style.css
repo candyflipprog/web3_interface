@@ -1,0 +1,51 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 6px;
+}
+
+.offer_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.offer_container input {
+    padding: 4px;
+    width: 25%;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.offer_container button {
+    padding: 8px;
+    width: 25%;
+    margin-top: 15px;
+    font-weight: 500;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    background-color: #127bd0;
+}
+
+.offer_container button:hover {
+    background-color: #0761aa;
+    transition: .6s;
+}
+
+.accept_offer_container input {
+    width: 25%;
+}
+
+input::placeholder {
+    text-align: center;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
