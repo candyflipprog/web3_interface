@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Переводы</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="account">
+        <span>Current account</span>
+      </div>
+      <div class="accounts">
+        <select class="accounts_list"></select>
+      </div>
+      <div class="balance">
+        <span>Balance: </span>
+        <span class="balance_account"></span>
+      </div>
+
+      <span>Current account:</span>
+      <span class="current_account"></span>
+    </div>
+
+    <div class="offer_container">
+      <input type="text" id="" placeholder="Somebody address" class="somebody_address" required/>
+      
+      <input type="number" placeholder="Amount" class="amount" required/>
+      
+      <input type="text" placeholder="Secret key" class="secret_key" required/>
+      
+      <button class="create_offer_btn">Create offer</button>
+    </div>
+
+    <div class="transactions">
+      <div class="transactions_list">
+        <span>Transactions list</span>
+        <div class="transactions_container"></div>
+      </div>
+    </div>
+
+    <script src="web3.min.js"></script>
+    <script src="app.js" type="module"></script>
+</body>
+</html>
