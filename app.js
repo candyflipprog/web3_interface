@@ -1,6 +1,6 @@
 import abi from "./abi.js";
 
-const contractAddress = "0x62be0ea8Dc4dA967F10d2c8398488Ffd35c5b8fD";
+const contractAddress = "0x1a07bAbf21c366737E8Decf1F9F17517cF0d4c57";
 
 let accounts, web3, myContract;
 
@@ -14,18 +14,18 @@ async function getAccounts() {
 
   for (let i = 0; i < accounts.length; i++) {
     let newOption = document.createElement("option");
-    newOption.innerHTML = accounts[i];
+    newOption.textContent = accounts[i];
 
     accountsList.append(newOption);
     currentAccount.textContent = accounts[0];
 
     const firstUser = await getBalance(accounts[0]);
-    balanceAccount.textContent = firstUser;
+    balanceAccount.textContent = `${firstUser} eth`;
 
     accountsList.addEventListener("click", async (event) => {
       currentAccount.textContent = event.target.value;
 
-      balanceAccount.textContent = await getBalance(event.target.value);
+      balanceAccount.textContent = `${await getBalance(event.target.value)} eth`;
       await renderingTransfers(event.target.value);
     });
   }
@@ -77,10 +77,15 @@ async function renderingTransfers(selectedAccount) {
       const somebodyItem = document.createElement("p");
       const amountItem = document.createElement("p");
       const acceptOffer = document.createElement("button");
+      const declineOffer = document.createElement("button");
 
+      
       acceptOffer.textContent = "Accept";
-
+      declineOffer.textContent = "Decline";
+      
+      transactionItemDiv.classList.add("transaction_container");
       acceptOffer.classList.add("accept_offer_btn");
+
       acceptOffer.id = `${transaction.transfer_id}`;
 
       somebodyItem.textContent = `Somebody: ${transaction.somebody}`;
