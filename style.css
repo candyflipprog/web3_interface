@@ -74,7 +74,7 @@ input[type="number"] {
     transition: .7s;
 }
 
-/* .decline_offer_btn {
+.decline_offer_btn {
     padding: 8px;
     border-radius: 6px;
     border: 1px solid gray;
@@ -88,4 +88,4 @@ input[type="number"] {
 .decline_offer_btn:hover {
     background-color: #cc0606;
     transition: .7s;
-} */
+}

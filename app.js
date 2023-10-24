@@ -1,6 +1,6 @@
 import abi from "./abi.js";
 
-const contractAddress = "0x1a07bAbf21c366737E8Decf1F9F17517cF0d4c57";
+const contractAddress = "0xbff6b8Aa23C17B6a0f030E1000149607D902A760";
 
 let accounts, web3, myContract;
 
@@ -9,7 +9,7 @@ const balanceAccount = document.querySelector(".balance_account");
 const currentAccount = document.querySelector(".current_account");
 
 async function getAccounts() {
-  web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:8545"));
+  web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
   accounts = await web3.eth.getAccounts();
 
   for (let i = 0; i < accounts.length; i++) {
@@ -20,12 +20,12 @@ async function getAccounts() {
     currentAccount.textContent = accounts[0];
 
     const firstUser = await getBalance(accounts[0]);
-    balanceAccount.textContent = `${firstUser} eth`;
+    balanceAccount.textContent = `${firstUser / 10 ** 18} eth`;
 
     accountsList.addEventListener("click", async (event) => {
       currentAccount.textContent = event.target.value;
 
-      balanceAccount.textContent = `${await getBalance(event.target.value)} eth`;
+      balanceAccount.textContent = `${await getBalance(event.target.value) / 10 ** 18} eth`;
       await renderingTransfers(event.target.value);
     });
   }
@@ -72,31 +72,34 @@ async function renderingTransfers(selectedAccount) {
       continue;
     }
 
-    if (selectedAccount === transaction.somebody) {
+    if (selectedAccount === transaction.somebody || selectedAccount === transaction.owner) {
       const transactionItemDiv = document.createElement("div");
       const somebodyItem = document.createElement("p");
       const amountItem = document.createElement("p");
       const acceptOffer = document.createElement("button");
       const declineOffer = document.createElement("button");
 
-      
+
       acceptOffer.textContent = "Accept";
       declineOffer.textContent = "Decline";
-      
+
       transactionItemDiv.classList.add("transaction_container");
       acceptOffer.classList.add("accept_offer_btn");
+      declineOffer.classList.add("decline_offer_btn");
 
       acceptOffer.id = `${transaction.transfer_id}`;
+      declineOffer.id = `${transaction.transfer_id}`;
 
       somebodyItem.textContent = `Somebody: ${transaction.somebody}`;
-      amountItem.textContent = `Amount: ${transaction.amount}`;
+      amountItem.textContent = `Amount: ${transaction.amount / 10 ** 18} eth`;
 
-      transactionItemDiv.append(somebodyItem, amountItem, acceptOffer);
+      transactionItemDiv.append(somebodyItem, amountItem, acceptOffer, declineOffer);
       transactionList.append(transactionItemDiv);
     }
   }
 
   acceptOffer();
+  declineOffer();
 }
 
 async function acceptOffer() {
@@ -118,10 +121,38 @@ async function acceptOffer() {
           });
 
         alert("Successfully get money");
-        location.reload();
+        renderingTransfers(currentAccountValue);
+        getAccounts();
       }
     });
   }
+}
+
+async function declineOffer() {
+  const declineBtns = document.querySelectorAll(".decline_offer_btn");
+  const transactions = await myContract.methods.getTransfers().call();
+
+  for (const declineBtn of declineBtns) {
+    declineBtn.addEventListener("click", async (event) => {
+      const currentAccountValue = currentAccount.textContent;
+
+      if (currentAccountValue == transactions[event.target.id].owner) {
+        await myContract.methods.cancel_offer(event.target.id).send({
+          from: currentAccountValue
+        });
+        alert("Successfully cancel transaction");
+        renderingTransfers(currentAccountValue);
+        getAccounts();
+      } else return alert("You are not owner this transfer");
+    });
+  }
+}
+
+function clearInputsCreateOffer() {
+  document.querySelector(".somebody_address").value = "";
+  document.querySelector(".amount").value = "";
+  document.querySelector(".secret_key").value = "";
+  location.reload();
 }
 
 async function main() {
@@ -137,10 +168,3 @@ async function main() {
 }
 
 main();
-
-function clearInputsCreateOffer() {
-  document.querySelector(".somebody_address").value = "";
-  document.querySelector(".amount").value = "";
-  document.querySelector(".secret_key").value = "";
-  location.reload();
-}
